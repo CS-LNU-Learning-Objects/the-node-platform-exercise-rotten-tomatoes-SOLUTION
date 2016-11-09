@@ -1,0 +1,30 @@
+{
+  "name": "rotten-tomatoes",
+  "version": "1.0.0",
+  "description": "Excercise in course 1dv023",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"do build stuff\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1dv023/sp222kh-rotten-tomatoes.git"
+  },
+  "keywords": [
+    "node",
+    "javascript",
+    "exercise"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jscs": "^2.8.0",
+    "jshint": "^2.9.1"
+  },
+  "dependencies": {
+    "co": "^4.6.0",
+    "fs-promise": "^0.3.1",
+    "xml2js": "^0.4.16"
+  }
+}
