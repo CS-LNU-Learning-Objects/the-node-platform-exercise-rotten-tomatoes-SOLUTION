@@ -1,49 +1,46 @@
-# node-mongodb-vagrant
-This is a boilerplate vagrant solution for students taking the course sevrer based web programming at the Linnaeus University, Kalmar, Sweden
+# Rotten Tomatoes
 
-Following stuff will be installed:
-* node.js, latest stable (OBS not LTS) version
-* npm (along with node.js)
-* mongodb - noSQL database, latest version
-* redis server - fast in memory server, version 3.0.6
+In this exercise, you will get started with a simple node application. The application will read from two files; one JSON file and one XML file.
 
-To get this to work, you must have VirtualBox and Vagrant installed. Installers for VirtualBox are available at http://www.virtualbox.org, and installers for
-Vagrant are available at http://www.vagrantup.com.
+The files contains famous movie titles and some metadata about those movies. You are supposed to write an application that reads the data from the files and calculates the average rating of the movies. The data in the JSON file stems from [IMDB](http://www.imdb.com/) whereas the XML file stems from [Rotten Tomatoes](http://www.rottentomatoes.com/). One average is calculated for the IMDB data and one average for the Rotten Tomatoes data. (The focus of this exercise is promises and callbacks, not calculating stuff.)
 
-Clone this repo to a folder on your local system and give it a name of your own (my_project in this case)
+Let’s get started!
 
-    git clone https://github.com/1dv023/node-mongodb-vagrant.git my_project
+## Getting started guide
 
-go to that directory and start up the vagrant machine
+Before you begin, make sure you have a laboratory environment set up according to your course specification.
 
-    cd my_project
-    vagrant up
+1. Start out by creating a `package.json` identifying your project. (`$ npm init`).
+1. Create a `.ignore` file for your environment (`$ git ignore node,visualstudiocode,windows >> .gitignore`, if you created the ignore alias, if necessary replace `visualstudiocode` with your IDE and/or `windows` with `macos` or `linux`).
+1. Create an `app.js` file in the root directory. (`$ touch app.js`)
+1. Create a directory called `lib`. (`$ mkdir lib`)
+1. Create an directory in the `lib` directory called `movies` (`$ mkdir lib/movies`)
+1. Create an file called `reviewer.js`  in the `lib` directory (`$ touch lib/reviewer.js`)
+1. Export a function from `reviewer.js` and require it in `app.js`. Add `console.log('Hello World)` to the function in `reviewer.js`. Call the function from `app.js` and run the application using `$ node app.js`. If the console greets you with "Hello World" you are good to go. Otherwise, debug!
+1. Copy the [JSON file](movies.json) and the [XML file](movies.xml) into the folder `./lib/movies`:
+    - `wget -O ./lib/movies/movies.xml 'https://raw.githubusercontent.com/CS-LNU-Learning-Objects/the-node-platform-exercise-rotten-tomatoes/master/movies.xml'`
+    - `wget -O ./lib/movies/movies.json 'https://raw.githubusercontent.com/CS-LNU-Learning-Objects/the-node-platform-exercise-rotten-tomatoes/master/movies.json'`
+1. Find an npm package that can convert xml to JavaScript objects. ([xml2js](https://www.npmjs.com/package/xml2js))
+1. Add the package to your project. (`$ npm install xml2js`)
 
-The Vagrantfile will download and install the hashicorp/precise32 vagrant box if you don't
-already have it.
+Now you are good to go.
 
-After a few minutes, you should have a virtual dev environment with node, npm, mongodb and redis.
-The port 8000 on the VM is forwarded to port 8000 on the localhost.
+In this exercise, the main goal is to train your skills in handling callbacks and promises. The recommended path to follow is, therefore:
 
-You can test out your environment by ssh'ing into your environment and running the sample script:
+1. Solve the exercise using the `fs` module (`const fs = require('fs')`) to read the content of the files and the module `xml2js` to convert the XML content to a JavaScript object.
+1. Wrap the fs callback interface behind a promise module, i.e. create a module called `fs-promise.js` with functions returning promises. Make use of `Promise.all()` to be able to read the XML and JSON files in parallel.
+1. Search the [npm library](https://www.npmjs.com/search?q=fs+promise) and discover that some one else already made a [promise wrapper](https://www.npmjs.com/package/fs-extra). Remove your `fs-promise.js` and use `fs-extra` instead. (`npm install fs-extra` `const fs = require('fs-extra')`)
+1. Use async/await and promises for an even slicker program flow.
 
-    vagrant ssh
-    node app.js
+### Example use and output
 
-## Important note about Installing NPM Packages
+```shell
+$ node app.js
+Average rating
+IMDB: 9.08
+Rotten Tomatoes: 94.8 %
+```
 
-There are problems installing npm packages in a vagrant machine running Virtual Box on Windows. This goes for certain packages as "jade" and "express" which are trying to create symlinks during installation
+### Bonus exercise
 
-This can cause problems when you're attempting to install certain packages via npm. For
-example, the 'jade' and 'express' packages create symlinks during installation.
-
-The best workaround for this is to install node packages in your shared folder with the
---no-bin-links flag, e.g.
-
-    npm install express --no-bin-links
-
-You can also try to install the package as globals if you need to execture the bin-file
-
-    npm install jade -g
-
-This vagrant images is tested on Mac OSX Yosemite with Virtual Box version 5.0.10 and Vagrant version 1.7.4
+Using the built in time measurement tool `console.time('What I am measuring')` and corresponding `console.timeEnd('What I am measuring')` you can measure the execution time of parts of your code. Use that to analyze which parts of your code are the bottlenecks. How could that be avoided?
