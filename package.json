@@ -1,16 +1,25 @@
 {
   "name": "exercise-rotten-tomato",
-  "version": "1.0.0",
-  "description": "Exercise: Rotten Tomatoes",
+  "version": "1.1.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "standard | snazzy",
+    "lint:fix": "standard --fix",
+    "start": "node app.js"
   },
   "author": "Mats Loock",
   "license": "MIT",
   "dependencies": {
-    "fs-extra": "^5.0.0",
-    "xml2js": "^0.4.19"
+    "fs-extra": "^8.1.0",
+    "xml2js": "^0.4.22"
+  },
+  "devDependencies": {
+    "standard": "*"
+  },
+  "standard": {
+    "env": {
+      "node": true,
+      "es6": true
+    }
   }
 }

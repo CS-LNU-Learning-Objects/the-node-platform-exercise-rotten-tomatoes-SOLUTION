@@ -2,18 +2,18 @@
  * The starting point of the application.
  *
  * @author Mats Loock
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 'use strict'
 
-const path = require('path')
+const { resolve } = require('path')
 const reviewer = require('./lib/reviewer')
 
 ;(async () => {
   try {
-    const imdbPath = path.resolve(__dirname, 'lib', 'movies', 'movies.json')
-    const rottenTomatoesPath = path.resolve(__dirname, 'lib', 'movies', 'movies.xml')
+    const imdbPath = resolve('movies.json')
+    const rottenTomatoesPath = resolve('movies.xml')
 
     const imdbPromise = reviewer.getMovieRatingAverage(imdbPath)
     const rottenTomatoPromise = reviewer.getMovieRatingAverage(rottenTomatoesPath)
@@ -28,12 +28,12 @@ const reviewer = require('./lib/reviewer')
   }
 })()
 
-// const imdbPath = path.resolve(__dirname, 'lib', 'movies', 'movies.json')
-// const rottenTomatoesPath = path.resolve(__dirname, 'lib', 'movies', 'movies.xml')
-//
+// const imdbPath = resolve('movies.json')
+// const rottenTomatoesPath = resolve('movies.xml')
+
 // const imdbPromise = reviewer.getMovieRatingAverage(imdbPath)
 // const rottenTomatoPromise = reviewer.getMovieRatingAverage(rottenTomatoesPath)
-//
+
 // Promise.all([imdbPromise, rottenTomatoPromise])
 //   .then(values => {
 //     console.log('Average rating')
