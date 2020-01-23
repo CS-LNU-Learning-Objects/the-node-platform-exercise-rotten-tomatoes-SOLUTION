@@ -10,7 +10,7 @@ Let's get started!
 
 Before you begin, make sure you have a laboratory environment set up according to your course specification.
 
-1. Start by creating a `package.json` identifying your project. (`$ npm init`).
+1. Start by creating a `package.json` identifying your project. (`npm init`).
 1. Follow the instruction at <https://www.npmjs.com/package/@lnu/eslint-config> to config the linting tool for the code and JSDoc comments.
 
 1. Add `start`, `lint` and `lint:fix` scripts to the `package.json` file.
