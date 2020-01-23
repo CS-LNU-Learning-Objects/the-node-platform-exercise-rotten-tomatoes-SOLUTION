@@ -1,25 +1,33 @@
 {
-  "name": "exercise-rotten-tomato",
-  "version": "1.1.0",
+  "name": "rotten-tomato",
+  "version": "1.0.0",
+  "description": "Solution proposal of the exercise 'Rotten Tomatoes'",
   "main": "app.js",
   "scripts": {
-    "lint": "standard | snazzy",
-    "lint:fix": "standard --fix",
-    "start": "node app.js"
+    "start": "node app.js",
+    "lint": "npx eslint . || exit 0",
+    "lint:fix": "npx eslint . --fix || exit 0"
   },
-  "author": "Mats Loock",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CS-LNU-Learning-Objects/the-node-platform-exercise-rotten-tomatoes-SOLUTION"
+  },
+  "author": "Mats Loock <mats.loock@lnu.se>",
   "license": "MIT",
   "dependencies": {
     "fs-extra": "^8.1.0",
-    "xml2js": "^0.4.22"
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "standard": "*"
+    "@lnu/eslint-config": "^1.0.6",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsdoc": "^20.4.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   },
-  "standard": {
-    "env": {
-      "node": true,
-      "es6": true
-    }
+  "eslintConfig": {
+    "extends": "@lnu"
   }
 }
