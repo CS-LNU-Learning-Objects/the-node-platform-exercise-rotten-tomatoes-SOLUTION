@@ -1,5 +1,7 @@
 # Rotten Tomatoes
 
+[Explanation](#explanation)
+
 In this exercise, you will get started with a simple node application. The application will read from two files, one JSON file, and one XML file.
 
 The files contain famous movie titles and some metadata about those movies. You are supposed to write an application that reads the data from the files and calculates the average rating of the movies. The data in the JSON file stems from [IMDB](http://www.imdb.com/), whereas the XML file stems from [Rotten Tomatoes](http://www.rottentomatoes.com/). One average is calculated for the IMDB data and one average for the Rotten Tomatoes data. (The focus of this exercise is promises and callbacks, not calculating stuff.)
@@ -16,7 +18,7 @@ Rotten Tomatoes: 94.8 %
 
 Let's get started!
 
-## Explaination
+## <a name="explaination"></a> Explaination
 ### app.js
 ```js
 const imdbPath = resolve(__dirname, 'lib', 'movies', 'movies.json')
