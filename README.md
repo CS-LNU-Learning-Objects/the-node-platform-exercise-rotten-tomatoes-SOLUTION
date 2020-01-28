@@ -4,47 +4,6 @@ In this exercise, you will get started with a simple node application. The appli
 
 The files contain famous movie titles and some metadata about those movies. You are supposed to write an application that reads the data from the files and calculates the average rating of the movies. The data in the JSON file stems from [IMDB](http://www.imdb.com/), whereas the XML file stems from [Rotten Tomatoes](http://www.rottentomatoes.com/). One average is calculated for the IMDB data and one average for the Rotten Tomatoes data. (The focus of this exercise is promises and callbacks, not calculating stuff.)
 
-Let's get started!
-
-## Getting started guide
-
-Before you begin, make sure you have a laboratory environment set up according to your course specification.
-
-1. Start by creating a `package.json` identifying your project. (`npm init`).
-1. Follow the instruction at <https://www.npmjs.com/package/@lnu/eslint-config> to config the linting tool for the code and JSDoc comments.
-
-1. Add `start`, `lint` and `lint:fix` scripts to the `package.json` file.
-
-    ```json
-    "scripts": {
-        "start": "node app.js",
-        "lint": "npx eslint . || exit 0",
-        "lint:fix": "npx eslint . --fix || exit 0"
-    }
-    ```
-
-1. Save the `package.json` file and run `npm install`.
-1. Create a `.ignore` file for your environment (`git ignore node,visualstudiocode,windows >> .gitignore`, if you created the ignore alias, if necessary replace `visualstudiocode` with your IDE and/or `windows` with `macos` or `linux`).
-1. Create an `app.js` file in the root directory. (`touch app.js`)
-1. Create a directory called `lib`. (`mkdir lib`)
-1. Create a directory in the `lib` directory called `movies` (`mkdir lib/movies`)
-1. Create a file called `reviewer.js`  in the `lib` directory (`touch lib/reviewer.js`)
-1. Export a function from `reviewer.js` and require it in `app.js`. Add `console.log('Hello, World!')` to the function in `reviewer.js`. Call the function from `app.js` and run the application using `npm start`. If the console greets you with "Hello, World!" you are good to go. Otherwise, debug!
-1. Copy the [JSON file](movies.json) and the [XML file](movies.xml) into the folder `./lib/movies`:
-    - `wget -O ./lib/movies/movies.xml 'https://raw.githubusercontent.com/CS-LNU-Learning-Objects/the-node-platform-exercise-rotten-tomatoes/master/movies.xml'`
-    - `wget -O ./lib/movies/movies.json 'https://raw.githubusercontent.com/CS-LNU-Learning-Objects/the-node-platform-exercise-rotten-tomatoes/master/movies.json'`
-1. Find a package at npm that can convert xml to JavaScript objects. ([xml2js](https://www.npmjs.com/package/xml2js))
-1. Add the package to your project. (`npm install xml2js`)
-
-Now you are good to go.
-
-In this exercise, the main goal is to train your skills in handling callbacks and promises. The recommended path to follow is, therefore:
-
-1. Solve the exercise using the `fs` module (`const fs = require('fs')`) to read the content of the files and the module `xml2js` to convert the XML content to a JavaScript object.
-1. Wrap the fs callback interface behind a promise module, i.e., create a module called `fs-promise.js` with functions returning promises. Make use of `Promise.all()` to be able to read the XML and JSON files in parallel.
-1. Search the [npm library](https://www.npmjs.com/search?q=fs+promise) and discover that someone else already made a [promise wrapper](https://www.npmjs.com/package/fs-extra). Remove your `fs-promise.js` and use `fs-extra` instead. (`npm install fs-extra` `const fs = require('fs-extra')`)
-1. Use async/await and promises for even slicker program flow.
-
 ### Example use and output
 
 ```shell
@@ -55,6 +14,54 @@ IMDB: 9.08
 Rotten Tomatoes: 94.8 %
 ```
 
-### Bonus exercise
+Let's get started!
 
-Using the built-in time measurement tool `console.time('What I am measuring')` and corresponding `console.timeEnd('What I am measuring')` you can measure the execution time of parts of your code. Use that to analyze which parts of your code are the bottlenecks. How could that be avoided?
+## Explaination
+### app.js
+```js
+const imdbPath = resolve(__dirname, 'lib', 'movies', 'movies.json')
+const rottenTomatoesPath = resolve(__dirname, 'lib', 'movies', 'movies.xml')
+```
+The `path` module's `resolve` is used to create an absolute path to the movie files.
+
+```js
+const imdbPromise = getMovieRatingAverage(imdbPath)
+const rottenTomatoPromise = getMovieRatingAverage(rottenTomatoesPath)
+```
+These paths are then used as arguments to `getMovieRatingAverage` which returns the movie average as a promise.
+
+```js
+const [imdb, rottenTomato] = await Promise.all([imdbPromise, rottenTomatoPromise])
+```
+`Promise.all` allow you to `await` both promises in parallel. This is a good idea to do if the next request doesn't depend on the result of the previous promise. `Promise.all` returns an array of the resolved promises in the order that they were. In other words, we know that the first item in the array is the average of IMDB, and the second is the average of Rotten Tomatoes.
+With that in mind, we can use deconstructing to name the values instead of using the index in the array as an identifier. `imdb` is arguably easier to understand than `average[0]`.
+
+## fs-promise.js
+This module wraps the `fs.readFile` function in a promise. This allows you to use `async/await` instead of having to use [callbacks](https://codeburst.io/javascript-what-the-heck-is-a-callback-aba4da2deced).
+
+## reviewer.js
+```js
+const parser = new Parser({ explicitArray: false })
+```
+Creating an `xml2js` parser.
+
+```js
+const text = await readFile(path, 'utf8')
+```
+We are using our own `readFile` to read the file that was provided as an argument. In this case, it will be a `String`.
+
+```js
+const data = text.startsWith('<?xml')
+    ? (await parser.parseStringPromise(text)).movies.movie
+    : JSON.parse(text)
+```
+`String` has a method called `startsWith`; this allows you to check if the string starts with a specific text. In this case, we check if the text starts with `<?xml`. If it does, we know it is XML. Then we can use the parser to parse the XML string to an object that has an array in `.movies.movie`. If it isn't an XML, we know that the text is JSON, and we can use `JSON.parse` to get an array with movies. Either way, the array of movies will be stored as `data`.
+
+```js
+return data
+    .map(m => m.rating)
+    .reduce((sum, rating) => sum + Number(rating), 0) / data.length
+```
+The movie objects contains a property called `rating`. This is the one we are interested in. `data.map(m => m.rating)` will pick the value from the ratings and return a new array of numbers. In other words, we will turn the array of `MovieObject` to an array of `Number`. `[MovieObject] -> [Number]`
+
+The reduce method will sum the ratings starting at `0`. `Number(rating)` is used to turn eventual number-like strings to numbers. This will result in the sum of all ratings. To get the number of ratings, we use `data.length`. In pseudo-code this is `totalRating / numberOfRatings`.
