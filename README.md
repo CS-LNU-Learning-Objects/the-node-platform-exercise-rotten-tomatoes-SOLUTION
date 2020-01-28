@@ -1,6 +1,6 @@
 # Rotten Tomatoes
 
-[Explanation](#explanation)
+[Explanation](#-explanation)
 
 In this exercise, you will get started with a simple node application. The application will read from two files, one JSON file, and one XML file.
 
