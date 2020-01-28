@@ -18,7 +18,7 @@ Rotten Tomatoes: 94.8 %
 
 Let's get started!
 
-## Explaination
+## Explanation
 ### app.js
 ```js
 const imdbPath = resolve(__dirname, 'lib', 'movies', 'movies.json')
